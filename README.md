@@ -1,68 +1,40 @@
 # vaultcore
 
-`vaultcore` packages a practical security tooling exercise in Kotlin. The emphasis is on deterministic behavior, a small public API, and examples that explain the tradeoffs.
+`vaultcore` is a Kotlin project in security tooling. Its focus is to validate password vault envelope metadata and KDF policy choices.
 
-## How I Read Vaultcore
+## Purpose
 
-The useful thing to inspect here is how the same score rule is represented in code, metadata, and examples. If those three pieces disagree, the audit script should make the drift visible.
+This is intentionally local and self-contained so it can be inspected without credentials, services, or seeded history.
 
-## Main Behaviors
+## Vaultcore Review Notes
 
-- Includes extended examples for replay guards, including `surge` and `degraded`.
-- Documents claim validation tradeoffs in `docs/operations.md`.
-- Runs locally with a single verification command and no external credentials.
-- Stores project constants and verification metadata in `metadata/project.json`.
-- Adds a repository audit script that checks structure before running the language verifier.
+The first comparison I would make is `replay exposure` against `policy width` because it shows where the rule is most opinionated.
 
-## Problem Shape
+## What Is Covered
 
-The repository exists to keep a technical idea small enough to reason about. The implementation avoids external dependencies where possible, then uses fixtures to make changes easy to review.
+- `fixtures/domain_review.csv` adds cases for trust boundary and claim drift.
+- `metadata/domain-review.json` records the same cases in structured form.
+- `config/review-profile.json` captures the read order and the two review questions.
+- `examples/vaultcore-walkthrough.md` walks through the case spread.
+- The Kotlin code includes a review path for `replay exposure` and `policy width`.
+- `docs/field-notes.md` explains the strongest and weakest cases.
 
-## Repository Map
+## Implementation Notes
 
-- `src`: primary implementation
-- `tests`: verification harness
-- `fixtures`: compact golden scenarios
-- `examples`: expanded scenario set
-- `metadata`: project constants and verification metadata
-- `docs`: operations and extension notes
-- `scripts`: local verification and audit commands
+The fixture data drives the tests. The code stays thin, while `metadata/domain-review.json` and `config/review-profile.json` explain what each case is meant to protect.
 
-## Internal Model
+The Kotlin code keeps the review rule close to the tests.
 
-The interesting part is the boundary between accepted and reviewed scenarios. Extended examples sit near that boundary so future edits can show whether the model became more permissive or more cautious. The Kotlin version keeps data classes and model logic close together for a JVM-friendly core.
-
-## How To Run It
+## Command
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-This runs the language-level build or test path against the compact fixture set.
+## Audit Path
 
-## Scenario Walkthrough
+The same command runs the local verification path. The highest-scoring domain case is `edge` at 202, which lands in `ship`. The most cautious case is `recovery` at 158, which lands in `ship`.
 
-The examples are meant to be readable before they are exhaustive. They cover enough variation to show how latency and risk can pull a decision below the threshold.
+## Limits
 
-## Validation
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
-```
-
-The audit command checks repository structure and README constraints before it delegates to the verifier.
-
-## Known Edges
-
-The fixture set is deliberately small. That keeps the review surface clear, but it also means the model should not be treated as a complete domain simulator.
-
-## Follow-Up Work
-
-- Add a short report command that prints the score breakdown for a single scenario.
-- Add malformed input fixtures so the failure path is as visible as the happy path.
-- Split the scoring constants into a typed configuration object and validate it before use.
-- Add one more security tooling fixture that focuses on a malformed or borderline input.
-
-## Run It Locally
-
-Use a normal shell with Kotlin available on `PATH`. The verifier is written as a PowerShell script because the portfolio was assembled on Windows.
+The repository is intentionally scoped to local checks. I would expand it by adding adversarial fixtures before adding features.

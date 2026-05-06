@@ -1,0 +1,73 @@
+{
+  "repo": "vaultcore",
+  "language": "Kotlin",
+  "category": "Security tooling",
+  "goal": "Validate password vault envelope metadata and KDF policy choices.",
+  "review_model": {
+    "terms": [
+      "trust boundary",
+      "claim drift",
+      "replay exposure",
+      "policy width"
+    ],
+    "lanes": [
+      "ship",
+      "watch",
+      "hold"
+    ],
+    "score": "signal * 2 + slack + confidence - drag * 3",
+    "purpose": "surface the domain-specific cases that need the most careful review"
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "focus": "trust boundary",
+      "signal": 67,
+      "slack": 24,
+      "drag": 24,
+      "confidence": 81,
+      "score": 167,
+      "lane": "ship"
+    },
+    {
+      "name": "stress",
+      "focus": "claim drift",
+      "signal": 82,
+      "slack": 53,
+      "drag": 30,
+      "confidence": 66,
+      "score": 193,
+      "lane": "ship"
+    },
+    {
+      "name": "edge",
+      "focus": "replay exposure",
+      "signal": 86,
+      "slack": 43,
+      "drag": 25,
+      "confidence": 62,
+      "score": 202,
+      "lane": "ship"
+    },
+    {
+      "name": "recovery",
+      "focus": "policy width",
+      "signal": 54,
+      "slack": 21,
+      "drag": 19,
+      "confidence": 86,
+      "score": 158,
+      "lane": "ship"
+    },
+    {
+      "name": "stale",
+      "focus": "trust boundary",
+      "signal": 62,
+      "slack": 39,
+      "drag": 15,
+      "confidence": 67,
+      "score": 185,
+      "lane": "ship"
+    }
+  ]
+}
