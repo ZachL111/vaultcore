@@ -60,3 +60,13 @@ kotlinc src/main/kotlin/Policy.kt src/main/kotlin/DomainReview.kt tests/PolicyTe
 java -jar build/test.jar
 
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-vaultcore-detail.ps1
+
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-vaultcore-properties.ps1
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-vaultcore-golden.ps1
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
